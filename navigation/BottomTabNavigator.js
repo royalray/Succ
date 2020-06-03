@@ -19,7 +19,7 @@ export default function BottomTabNavigator({ navigation, route }) {
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
       <BottomTab.Screen
-        name="My Succulent"
+        name="my-succulent"
         component={Succulents}
         options={{
           title: 'Home',
@@ -27,7 +27,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         }}
       />
       <BottomTab.Screen
-        name="Succulents"
+        name="Create"
         component={AddSucculent}
         options={{
           title: 'Add Succulent',
@@ -43,8 +43,10 @@ function getHeaderTitle(route) {
   const routeName = route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
 
   switch (routeName) {
-    case 'Home':
-      return 'How to get started';
+    case 'Create':
+      return 'Add a new succulent';
+    case 'my-succulent':
+          return 'Your succulent';
     case 'Links':
       return 'Links to learn more';
   }

@@ -6,27 +6,42 @@ import AddSucculent from "../components/AddSucculent";
 
 
 import { MonoText } from '../components/StyledText';
+import Entries from "../components/Entries";
 
 export default function Succulents() {
-    const [mySucculent,setMySucculent]=React.useState({})
-    try {
-        AsyncStorage.getItem("MySucculent").then(Succulent=>{
-            setMySucculent(JSON.parse(Succulent))
-        })
+    const [mySucculent,setMySucculent]=React.useState({name:'',picture:{uri:''},entries:[]})
+    React.useEffect(()=>{
+        try {
+            AsyncStorage.getItem("MySucculent").then(Succulent=>{
+                if(Succulent !== null){
+                    setMySucculent(JSON.parse(Succulent))
+                } else {
+                    setMySucculent({
+                        name:'No image yet',
+                        picture:{
+                            uri: ''
+                        },
+                        entries:[]
+                    })
+                }
 
-    }catch (e) {
+            })
 
-    }
-    const read=async ()=>{
+        }catch (e) {
 
-
+        }
+    },[])
+    const updateEntries = (entries) => {
+        mySucculent.entries = [...entries,...mySucculent.entries];
+        console.log(mySucculent);
+        setMySucculent(mySucculent);
+        AsyncStorage.setItem('MySucculent',JSON.stringify(mySucculent));
     }
     return (
         <View style={styles.container}>
-            <Text>test</Text>
-
-                <Text>{mySucculent.name}</Text>
-
+            <Text style={styles.succulentName}>{mySucculent.name}</Text>
+            <Image style={styles.succulentImage} source={mySucculent.picture.uri}/>
+            <Entries entries={mySucculent.entries} callBack={updateEntries}/>
         </View>
     );
 }
@@ -37,9 +52,22 @@ Succulents.navigationOptions = {
 };
 
 const styles = StyleSheet.create({
+    succulentName:{
+        paddingLeft: '30px',
+        fontSize: '160%',
+        marginTop: '20px'
+    },
+    succulentImage:{
+        width: '100%',
+        height: '200px',
+        marginTop: '20px',
+        minHeight: '300px'
+    },
     container: {
         flex: 1,
         backgroundColor: '#fff',
+        width: '90%',
+        marginLeft: '5%'
     },
     developmentModeText: {
         marginBottom: 20,
